@@ -55,7 +55,7 @@ Older than Laravel 5.5 need a service provider registration.
 // config/app.php
 
 'providers' => [
-  Encalve\RolesAndPermission\PermissionServiceProvider::class,
+  Encalve\StaticAuthManager\PermissionServiceProvider::class,
 ];
 ```
 
@@ -188,7 +188,7 @@ You can use several permissions too.
 #### Middleware
 Add the middleware to your `src/Http/Kernel.php`
 ```php
-use Encalve\RolesAndPermission\Middlewares\RoleMiddleware;
+use Encalve\StaticAuthManager\Middlewares\RoleMiddleware;
 class Kernel extends HttpKernel
 {
 ... 

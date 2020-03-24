@@ -1,6 +1,6 @@
 <?php
 
-namespace Encalve\RolesAndPermission\Test;
+namespace Encalve\StaticAuthManager\Test;
 
 class RoleTest extends TestCase
 {

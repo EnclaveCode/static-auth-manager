@@ -1,6 +1,6 @@
 <?php
 
-namespace Encalve\RolesAndPermission\Middlewares;
+namespace Encalve\StaticAuthManager\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;

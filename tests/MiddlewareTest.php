@@ -1,11 +1,11 @@
 <?php
 
-namespace Encalve\RolesAndPermission\Test;
+namespace Encalve\StaticAuthManager\Test;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Encalve\RolesAndPermission\Middlewares\RoleMiddleware;
+use Encalve\StaticAuthManager\Middlewares\RoleMiddleware;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class MiddlewareTest extends TestCase

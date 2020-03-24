@@ -1,11 +1,11 @@
 <?php
 
-namespace Encalve\RolesAndPermission\Test;
+namespace Encalve\StaticAuthManager\Test;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Encalve\RolesAndPermission\PermissionServiceProvider;
+use Encalve\StaticAuthManager\PermissionServiceProvider;
 
 class TestCase extends OrchestraTestCase
 {

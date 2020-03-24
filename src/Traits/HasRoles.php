@@ -1,6 +1,6 @@
 <?php
 
-namespace Encalve\RolesAndPermission\Traits;
+namespace Encalve\StaticAuthManager\Traits;
 
 use Illuminate\Support\Collection;
 
@@ -17,9 +17,11 @@ trait HasRoles
      */
     public function assignRole(...$role)
     {
+
         $rolesInConfig = config('permission.roles');
 
 
+        //@TODO
         // if (array_key_exists($role, $rolesInConfig)) {
         //     $this->{config('permission.column_name')} = $role;
 
