@@ -53,11 +53,11 @@ class RoleTest extends TestCase
         $this->user->role = 'admin';
         $this->user->save();
 
-        $this->assertEquals($this->user->getRoleName(), 'admin');
+        $this->assertEquals($this->user->getRoles(), 'admin');
     }
 
     public function testGetUnsetRoleName(): void
     {
-        $this->assertEquals($this->user->getRoleName(), null);
+        $this->assertEquals($this->user->getRoles(), null);
     }
 }

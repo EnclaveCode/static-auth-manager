@@ -18,7 +18,7 @@ trait HasRoles
     public function assignRole(...$role)
     {
 
-        $rolesInConfig = config('permission.roles');
+        // $rolesInConfig = config('permission.roles');
 
 
         //@TODO

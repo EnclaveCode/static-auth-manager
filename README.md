@@ -93,12 +93,12 @@ $model->assignRole('admin');
 
 #### Check role
 
-You can check the role via:
+You can check the roles via:
 
 ```php
 $model->hasRole('admin');
 
-$model->getRoleName(); // return admin
+$model->getRoles(); // return admin
 ```
 
 ### Using permissions
