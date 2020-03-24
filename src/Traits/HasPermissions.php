@@ -1,6 +1,6 @@
 <?php
 
-namespace Encalve\StaticAuthManager\Traits;
+namespace Enclave\StaticAuthManager\Traits;
 
 use Illuminate\Support\Collection;
 

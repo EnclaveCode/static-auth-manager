@@ -1,11 +1,11 @@
 <?php
 
-namespace Encalve\StaticAuthManager\Test;
+namespace Enclave\StaticAuthManager\Test;
 
+use Enclave\StaticAuthManager\PermissionServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Encalve\StaticAuthManager\PermissionServiceProvider;
 
 class TestCase extends OrchestraTestCase
 {
@@ -27,8 +27,6 @@ class TestCase extends OrchestraTestCase
      *
      * @param  \Illuminate\Foundation\Application $app
      * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     protected function getPackageProviders($app): array
     {
@@ -39,7 +37,6 @@ class TestCase extends OrchestraTestCase
      * Define environment setup.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
     protected function getEnvironmentSetUp($app): void
     {

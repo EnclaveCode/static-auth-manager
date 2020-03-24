@@ -40,7 +40,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Encalve\\StaticAuthManager\\Test\\": "tests"
+      "Enclave\\StaticAuthManager\\Test\\": "tests"
     }
   },
   "scripts": {

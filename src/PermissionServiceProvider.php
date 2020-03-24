@@ -1,6 +1,6 @@
 <?php
 
-namespace Encalve\StaticAuthManager;
+namespace Enclave\StaticAuthManager;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
