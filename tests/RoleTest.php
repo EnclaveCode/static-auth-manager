@@ -50,7 +50,7 @@ class RoleTest extends TestCase
         $this->expectExceptionMessage('Role: ' . collect($roleNotExisted)->toJson() . 'does not exist');
 
 
-        $this->$this->assertTrue($this->user->getRoles()->isEmpty());
+        $this->assertTrue($this->user->getRoles()->isEmpty());
     }
 
     public function testAssignNonExistentRoles(): void
@@ -62,13 +62,13 @@ class RoleTest extends TestCase
         $this->expectException(IncorrectRoleNameException::class);
         $this->expectExceptionMessage('Role: ' . collect($rolesNotExisted)->toJson() . 'does not exist');
 
-        $this->$this->assertTrue($this->user->getRoles()->isEmpty());
+        $this->assertTrue($this->user->getRoles()->isEmpty());
     }
 
     public function testAssignOneExistedAndOneNonExistentRoles(): void
     {
         $roleExisted = 'admin';
-        $rolesNotExisted = 'bar';
+        $roleNotExisted = 'bar';
 
         $roles[] = $roleExisted;
         $roles[] = $roleNotExisted;
@@ -76,10 +76,10 @@ class RoleTest extends TestCase
         $this->user->assignRole($roles);
 
         $this->expectException(IncorrectRoleNameException::class);
-        $this->expectExceptionMessage('Role: ' . collect($rolesNotExisted)->toJson() . 'does not exist');
+        $this->expectExceptionMessage('Role: ' . collect($roleNotExisted)->toJson() . 'does not exist');
 
 
-        $this->$this->assertEquals($this->user->getRoles()->isEmpty(), collect($roles));
+        $this->assertEquals($this->user->getRoles(), collect($roles));
     }
 
     public function testAssignedTwoExistedRolesButOneAlreadyAssigned(): void
@@ -88,11 +88,11 @@ class RoleTest extends TestCase
 
         $this->user->assignRole($roles);
 
-        $this->$this->assertTrue($this->user->getRoles(), collect($roles));
+        $this->assertEquals($this->user->getRoles(), collect($roles));
 
         $this->user->assignRole('admin');
 
-        $this->$this->assertTrue($this->user->getRoles(), collect($roles));
+        $this->assertEquals($this->user->getRoles(), collect($roles));
     }
 
     public function testHasNotExistedRole(): void
