@@ -18,6 +18,7 @@ trait HasRoles
     public function assignRole(...$roles)
     {
 
+        //@TODO Assign role
         $rolesInConfig = config('permission.roles');
         $roles = collect($roles)
             ->flatten();
@@ -60,5 +61,17 @@ trait HasRoles
         return $roles;
     }
 
-    //@TODO - DETACH ROLE
+    /**
+     * Detach the role from the model
+     *
+     * @param  array|string $roles role name
+     * @return $this
+     */
+    public function detachRole(...$roles)
+    {
+
+        // @TODO Detach role
+
+        return $this;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Enclave\StaticAuthManager\Test;
 
+use Enclave\StaticAuthManager\Exceptions\IncorrectRoleNameException;
 use Enclave\StaticAuthManager\PermissionServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
@@ -67,5 +68,16 @@ class TestCase extends OrchestraTestCase
             $table->string('email');
             $table->string('role')->nullable();
         });
+    }
+
+    /**
+     * @param string|array $notExistedRoles
+     *
+     * @return void
+     */
+    protected function expectIncorrectRoleNameException($notExistedRoles)
+    {
+        $this->expectException(IncorrectRoleNameException::class);
+        $this->expectExceptionMessage('Role: ' . collect($notExistedRoles)->flatten()->toJson() . 'does not exist');
     }
 }

@@ -2,8 +2,6 @@
 
 namespace Enclave\StaticAuthManager\Test;
 
-use Enclave\StaticAuthManager\Exceptions\IncorrectRoleNameException;
-
 class RoleTest extends TestCase
 {
 
@@ -44,11 +42,10 @@ class RoleTest extends TestCase
     public function testAssignNonExistentRole(): void
     {
         $roleNotExisted = 'foo';
+
         $this->user->assignRole($roleNotExisted);
 
-        $this->expectException(IncorrectRoleNameException::class);
-        $this->expectExceptionMessage('Role: ' . collect($roleNotExisted)->toJson() . 'does not exist');
-
+        $this->expectIncorrectRoleNameException($roleNotExisted);
 
         $this->assertTrue($this->user->getRoles()->isEmpty());
     }
@@ -59,8 +56,7 @@ class RoleTest extends TestCase
 
         $this->user->assignRole($rolesNotExisted);
 
-        $this->expectException(IncorrectRoleNameException::class);
-        $this->expectExceptionMessage('Role: ' . collect($rolesNotExisted)->toJson() . 'does not exist');
+        $this->expectIncorrectRoleNameException($rolesNotExisted);
 
         $this->assertTrue($this->user->getRoles()->isEmpty());
     }
@@ -75,9 +71,7 @@ class RoleTest extends TestCase
 
         $this->user->assignRole($roles);
 
-        $this->expectException(IncorrectRoleNameException::class);
-        $this->expectExceptionMessage('Role: ' . collect($roleNotExisted)->toJson() . 'does not exist');
-
+        $this->expectIncorrectRoleNameException($roleNotExisted);
 
         $this->assertEquals($this->user->getRoles(), collect($roles));
     }
@@ -102,10 +96,9 @@ class RoleTest extends TestCase
 
         $this->user->assignRole($role);
 
-        $this->assertFalse($this->user->hasRole($notExistedRole));
+        $this->expectIncorrectRoleNameException($notExistedRole);
 
-        $this->expectException(IncorrectRoleNameException::class);
-        $this->expectExceptionMessage('Role: ' . collect($notExistedRole)->toJson() . 'does not exist');
+        $this->assertFalse($this->user->hasRole($notExistedRole));
     }
 
     public function testHasNotAssignedOneSearchedRoleInAssignedOneRole(): void
@@ -179,16 +172,168 @@ class RoleTest extends TestCase
 
     public function testHasAssignedOneSearchedRoleInAssignedOneRole(): void
     {
-        $roles = 'user';
+        $role = 'user';
         $searchedRole = 'user';
 
-        $this->user->assignRole($roles);
+        $this->user->assignRole($role);
 
         $this->assertTrue($this->user->hasRole($searchedRole));
     }
 
-    public function testGetAllRolesWhenUserDoesNotHaveAny(): void
+    public function testDetachOneRoleIfHasOneRole(): void
     {
-        $this->assertEquals($this->user->getRoles(), collect());
+        $role = 'user';
+        $this->user->assignRole($role);
+
+        $this->assertEquals($this->user->getRoles(), collect($role));
+
+        $this->user->detachRole($role);
+
+        $this->assertTrue($this->user->getRoles()->isEmpty());
+    }
+
+    public function testDetachManyRolesWithOneExistedIfHasOneRole(): void
+    {
+        $role = 'user';
+
+        $detachedRoles = ['user', 'admin'];
+
+        $this->user->assignRole($role);
+
+        $this->assertEquals($this->user->getRoles(), collect($role));
+
+        $this->user->detachRole($detachedRoles);
+
+        $this->assertTrue($this->user->getRoles()->isEmpty());
+    }
+
+    public function testDetachManyRolesWithOneExistedIfHasManyRole(): void
+    {
+        $role = ['user', 'writer'];
+
+        $detachedRoles = ['user', 'admin'];
+
+        $rolesDiff = array_diff($role, $detachedRoles);
+
+        $this->user->assignRole($role);
+
+        $this->assertEquals($this->user->getRoles(), collect($role));
+
+        $this->user->detachRole($detachedRoles);
+
+        $this->assertEquals($this->user->getRoles(), collect($rolesDiff));
+    }
+
+    public function testDetachManyRolesWithTwoExistedIfHasManyRole(): void
+    {
+        $role = ['user', 'writer', 'admin'];
+
+        $detachedRoles = ['user', 'admin'];
+
+        $rolesDiff = array_diff($role, $detachedRoles);
+
+        $this->user->assignRole($role);
+
+        $this->assertEquals($this->user->getRoles(), collect($role));
+
+        $this->user->detachRole($detachedRoles);
+
+        $this->assertEquals($this->user->getRoles(), collect($rolesDiff));
+    }
+
+    public function testDetachOneRolesIfHasManyRole(): void
+    {
+        $role = ['user', 'writer', 'admin'];
+
+        $detachedRoles = 'writer';
+
+        $rolesDiff = array_diff($role, [$detachedRoles]);
+
+        $this->user->assignRole($role);
+
+        $this->assertEquals($this->user->getRoles(), collect($role));
+
+        $this->user->detachRole($detachedRoles);
+
+        $this->assertEquals($this->user->getRoles(), collect($rolesDiff));
+    }
+
+    public function testDetachOneNonExistedRole(): void
+    {
+        $roles = ['user', 'writer', 'admin'];
+
+        $detachedRoles = 'foo';
+
+        $this->user->assignRole($roles);
+
+        $this->assertEquals($this->user->getRoles(), collect($roles));
+
+        $this->user->detachRole($detachedRoles);
+
+        $this->expectIncorrectRoleNameException($detachedRoles);
+
+        $this->assertTrue($this->user->hasRole($roles));
+    }
+
+    public function testDetachManyNonExistedRole(): void
+    {
+        $roles = ['user', 'writer', 'admin'];
+
+        $detachedRoles = ['foo', 'boom'];
+
+        $rolesDiff = array_diff($roles, $detachedRoles);
+
+        $this->user->assignRole($roles);
+
+        $this->assertEquals($this->user->getRoles(), collect($roles));
+
+        $this->user->detachRole($detachedRoles);
+
+        $this->expectIncorrectRoleNameException($rolesDiff);
+
+        $this->assertTrue($this->user->hasRole($roles));
+    }
+
+    public function testDetachManyNonExistedAndOneExistedRole(): void
+    {
+        $roles = ['user', 'writer', 'admin'];
+
+        $detachedRoles = ['writer', 'foo', 'boom'];
+
+        $rolesDiff = array_diff($roles, $detachedRoles);
+
+        $this->user->assignRole($roles);
+
+        $this->assertEquals($this->user->getRoles(), collect($roles));
+
+        $this->user->detachRole($detachedRoles);
+
+        $this->expectIncorrectRoleNameException($rolesDiff);
+
+        $this->assertTrue($this->user->hasRole($roles));
+    }
+
+    public function testDetachManyNonExistedAndOneExistedRoleAnotherCase(): void
+    {
+        $roles = ['user', 'writer', 'admin'];
+
+        $detachedRoles = ['foo', 'boom', 'writer'];
+
+        $rolesDiff = array_diff($roles, $detachedRoles);
+
+        $this->user->assignRole($roles);
+
+        $this->assertEquals($this->user->getRoles(), collect($roles));
+
+        $this->user->detachRole($detachedRoles);
+
+        $this->expectIncorrectRoleNameException($rolesDiff);
+
+        $this->assertTrue($this->user->hasRole($roles));
+    }
+
+    public function testNotHasRolesWhenUserDoesNotHaveAny(): void
+    {
+        $this->assertTrue($this->user->getRoles()->isEmpty());
     }
 }
