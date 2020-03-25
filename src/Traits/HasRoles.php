@@ -18,17 +18,9 @@ trait HasRoles
     public function assignRole(...$role)
     {
 
-        // $rolesInConfig = config('permission.roles');
+        $rolesInConfig = config('permission.roles');
 
 
-        //@TODO
-        // if (array_key_exists($role, $rolesInConfig)) {
-        //     $this->{config('permission.column_name')} = $role;
-
-        //     if ($this->exists) {
-        //         $this->save();
-        //     }
-        // }
 
         return $this;
     }
@@ -64,4 +56,6 @@ trait HasRoles
 
         return $roles;
     }
+
+    //@TODO DETACH ROLE
 }

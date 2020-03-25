@@ -73,6 +73,7 @@ trait HasPermissions
      */
     public function getAllPermissions(): Collection
     {
+        //@todo
         $roles = config('permission.roles');
         $role = $this->{config('permission.column_name')};
 
