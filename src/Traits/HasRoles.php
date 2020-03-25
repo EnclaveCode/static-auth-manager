@@ -12,13 +12,15 @@ trait HasRoles
     /**
      * Assign the role to the model
      *
-     * @param  array|string $role role name
+     * @param  array|string $roles role name
      * @return $this
      */
-    public function assignRole(...$role)
+    public function assignRole(...$roles)
     {
 
         $rolesInConfig = config('permission.roles');
+        $roles = collect($roles)
+            ->flatten();
 
 
 
@@ -37,6 +39,7 @@ trait HasRoles
         $roles = collect($roles);
 
         return $currentRoles
+            ->flatten()
             ->filter(function ($role) use ($currentRoles) {
                 return $currentRoles->contains($role);
             })
@@ -57,5 +60,5 @@ trait HasRoles
         return $roles;
     }
 
-    //@TODO DETACH ROLE
+    //@TODO - DETACH ROLE
 }

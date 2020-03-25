@@ -14,12 +14,6 @@
     {
       "name": "Kamil Bartczak",
       "email": "kamil.bartczak06839@gmail.com"
-    },
-    {
-      "name": "Philipp Kuebler",
-      "email": "philipp@enclave.com",
-      "homepage": "https://enclave.de",
-      "role": "Developer"
     }
   ],
   "require": {
