@@ -16,7 +16,7 @@ return [
      * 'admin' => [
      *     'users/#',
      *     'users/+/field',
-     *     '!users/create'
+     *     '!users/create',
      * ]
      * ---------------
      * 'admin' => [

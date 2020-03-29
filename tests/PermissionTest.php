@@ -2,8 +2,9 @@
 
 namespace Enclave\StaticAuthManager\Test;
 
+
 /**
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * Class PermissionTest
  */
 class PermissionTest extends TestCase
 {
@@ -12,124 +13,145 @@ class PermissionTest extends TestCase
     {
         parent::setUp();
 
-        $this->permissions = [
-            'user/#',
-            '!user/create',
-            'test/+/+/test',
+        $this->userPermissions = [
+            'user/edit',
+            'wildcard_example/*',
+            'article/edit'
         ];
+        $this->app['config']->set('permission.roles.user', $this->userPermissions);
 
-        $this->app['config']->set('permission.roles.user', $this->permissions);
+
+        $this->adminPermissions = [
+            'user/*',
+            'article/create'
+        ];
+        $this->app['config']->set('permission.roles.admin', $this->adminPermissions);
+
 
         $this->user = User::create(['email' => 'test@user.com']);
     }
 
-    public function testGetPermissions(): void
+    /** @test */
+    public function get_permissions_with_single_role(): void
     {
         $this->user->assignRole('user');
 
-        $this->assertEquals($this->user->getAllPermissions(), collect($this->permissions));
+        $this->assertEquals($this->user->getPermissions(), collect($this->userPermissions));
     }
 
-    public function testGetPermissionsWithoutRole(): void
+    /** @test */
+    public function get_permissions_with_many_roles(): void
     {
-        $this->assertEquals($this->user->getAllPermissions(), collect([]));
+        $this->user->assignRole(['user', 'admin']);
+
+        $adminPermissions = collect($this->adminPermissions);
+        $userPermissions = collect($this->userPermissions);
+
+        $allRolesPermissions = $adminPermissions->merge($userPermissions)->values()->sort();
+
+        $this->assertEquals($this->user->getPermissions(), collect($allRolesPermissions));
     }
 
-    public function testHasAnyPermissionString(): void
+    /** @test */
+    public function get_permissions_without_role(): void
+    {
+        $this->assertEquals($this->user->getPermissions(), collect([]));
+    }
+
+    /** @test */
+    public function has_any_permission_string(): void
     {
         $this->user->assignRole('user');
 
         $this->assertTrue($this->user->hasAnyPermission('user/edit'));
     }
 
-    public function testHasAnyPermissionArray(): void
+    /** @test */
+    public function has_any_permission_array(): void
     {
         $this->user->assignRole('user');
 
         $this->assertTrue($this->user->hasAnyPermission(['user/edit', 'user/create']));
     }
 
-    public function testHasPermissionToString(): void
+    /** @test */
+    public function has_permission_to_string(): void
     {
         $this->user->assignRole('user');
 
         $this->assertTrue($this->user->hasPermissionTo('user/edit'));
     }
 
-    public function testHasPermissionToArray(): void
+    /** @test */
+    public function test_has_permission_to_array(): void
     {
         $this->user->assignRole('user');
 
         $this->assertFalse($this->user->hasPermissionTo(['user/edit', 'user/create']));
     }
 
-    public function testHasPermissionToForbiddenRule(): void
+    /** @test */
+    public function has_permission_to_forbidden_rule(): void
     {
         $this->user->assignRole('user');
 
         $this->assertFalse($this->user->hasPermissionTo('user/create'));
     }
 
-    public function testHasPermissionToNotDefined(): void
+    /** @test */
+    public function has_permission_to_not_defined(): void
     {
         $this->user->assignRole('user');
 
         $this->assertFalse($this->user->hasPermissionTo('news/edit'));
     }
 
-    public function testHasPermissionToMultipleWildcards(): void
+    /** @test */
+    public function has_permission_to_multiple_wildcards(): void
     {
         $this->user->assignRole('user');
 
-        $this->assertTrue($this->user->hasPermissionTo('test/testa/testb/test'));
+        $this->assertTrue($this->user->hasPermissionTo('wildcard_example/foo/bar'));
     }
 
-    public function testHasPermissionToWrongMultipleWildcards(): void
+    /** @test */
+    public function has_permission_to_not_defined_with_multiple_roles(): void
     {
-        $this->user->assignRole('user');
+        $this->user->assignRole(['user', 'admin']);
 
-        $this->assertFalse($this->user->hasPermissionTo('test/testa/test'));
+        $this->assertFalse($this->user->hasPermissionTo('news/edit'));
     }
 
-    public function testHasPermissionString(): void
+    /** @test */
+    public function has_permission_to_multiple_wildcards_with_multiple_roles(): void
     {
-        $this->user->assignRole('user');
+        $this->user->assignRole(['user', 'admin']);
 
-        $this->assertTrue($this->user->hasPermission('user/edit'));
+        $this->assertTrue($this->user->hasPermissionTo('wildcard_example/foo/bar'));
     }
 
-    public function testHasPermissionArray(): void
+    /** @test */
+    public function has_permission_if_one_role_has_and_one_role_has_not_permission(): void
     {
-        $this->user->assignRole('user');
+        $this->user->assignRole(['user', 'admin']);
 
-        $this->assertFalse($this->user->hasPermission(['user/edit', 'user/create']));
+        $this->assertTrue($this->user->hasPermissionTo('user/edit'));
     }
 
-    public function testHasPermissionForbiddenRule(): void
+    /** @test */
+    public function has_permission_if_every_role_has_different_permission(): void
     {
-        $this->user->assignRole('user');
+        $this->user->assignRole(['user', 'admin']);
 
-        $this->assertFalse($this->user->hasPermission('user/create'));
+        $this->assertTrue($this->user->hasPermissionTo(['article/create', 'article/edit']));
     }
 
-    public function testHasPermissionNotDefined(): void
+    /** @test */
+    public function has_any_permission_if_every_role_has_different_permission(): void
     {
-        $this->user->assignRole('user');
+        $this->user->assignRole(['user', 'admin']);
 
-        $this->assertFalse($this->user->hasPermission('news/edit'));
-    }
-
-    public function testHasPermissionMultipleWildcards(): void
-    {
-        $this->user->assignRole('user');
-
-        $this->assertTrue($this->user->hasPermission('test/testa/testb/test'));
-    }
-
-    public function testHasPermissionWrongMultipleWildcards(): void
-    {
-        $this->user->assignRole('user');
-
-        $this->assertFalse($this->user->hasPermission('test/testa/test'));
+        $this->assertFalse($this->user->hasPermissionTo(['article/create', 'article/foo']));
+        $this->assertFalse($this->user->hasPermissionTo(['article/edit', 'article/foo']));
     }
 }

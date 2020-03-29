@@ -37,7 +37,7 @@ class MatchPermissionTest extends TestCase
     {
         $rules = collect([
             ['company', 'new'],
-            ['user', '#'],
+            ['user', '*'],
         ]);
 
         $this->assertTrue($this->user->matchPermission($rules, $this->permission));
@@ -46,17 +46,7 @@ class MatchPermissionTest extends TestCase
     public function testForbiddenRule(): void
     {
         $rules = collect([
-            ['!user', '#'],
-        ]);
-
-        $this->assertFalse($this->user->matchPermission($rules, $this->permission));
-    }
-
-    public function testOverwriteRule(): void
-    {
-        $rules = collect([
-            ['user', '#'],
-            ['!user', 'edit'],
+            ['foo', '*'],
         ]);
 
         $this->assertFalse($this->user->matchPermission($rules, $this->permission));

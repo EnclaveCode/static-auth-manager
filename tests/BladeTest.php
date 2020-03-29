@@ -12,8 +12,12 @@ class BladeTest extends TestCase
         parent::setUp();
 
         $this->app['config']->set('permission.roles.admin', [
-            'users/#',
-            '!users/create',
+            'users/edit',
+            'users/delete',
+        ]);
+
+        $this->app['config']->set('permission.roles.user', [
+            'users/create',
         ]);
 
         $this->user = User::create(['email' => 'test@user.com']);
@@ -27,12 +31,25 @@ class BladeTest extends TestCase
         $this->assertEquals($this->renderView('permission', ['permission' => 'users/edit']), 'Test');
         $this->assertEquals($this->renderView('permission', ['permission' => 'users/create']), '');
 
-        $this->assertEquals($this->renderView('permission', [
-            'permission' => 'users/edit|users/create',
-        ]), '');
-        $this->assertEquals($this->renderView('permission', [
-            'permission' => 'users/edit|users/delete',
-        ]), 'Test');
+        $this->assertEquals(
+            $this->renderView(
+                'permission',
+                [
+                    'permission' => 'users/edit|users/create',
+                ]
+            ),
+            ''
+        );
+
+        $this->assertEquals(
+            $this->renderView(
+                'permission',
+                [
+                    'permission' => 'users/edit|users/delete',
+                ]
+            ),
+            'Test'
+        );
     }
 
     public function testAnyPermission(): void

@@ -26,21 +26,11 @@ class MatchRuleToPermissionTest extends TestCase
         $this->assertTrue($this->user->matchRuleToPermission($rule, $this->permission));
     }
 
-    public function testSlotRule(): void
-    {
-        $rule = [
-            'user',
-            '+',
-        ];
-
-        $this->assertTrue($this->user->matchRuleToPermission($rule, $this->permission));
-    }
-
     public function testWildcardRule(): void
     {
         $rule = [
             'user',
-            '#',
+            '*',
         ];
 
         $this->assertTrue($this->user->matchRuleToPermission($rule, $this->permission));
@@ -51,17 +41,7 @@ class MatchRuleToPermissionTest extends TestCase
         $rule = [
             'user',
             'edit',
-            '#',
-        ];
-
-        $this->assertTrue($this->user->matchRuleToPermission($rule, $this->permission));
-    }
-
-    public function testIgnoreForbiddenRule(): void
-    {
-        $rule = [
-            '!user',
-            'edit',
+            '*',
         ];
 
         $this->assertTrue($this->user->matchRuleToPermission($rule, $this->permission));

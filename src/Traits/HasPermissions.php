@@ -15,7 +15,7 @@ trait HasPermissions
      */
     public function hasPermissionTo(...$permissions): bool
     {
-        $rules = $this->getAllPermissions()
+        $rules = $this->getPermissions()
             ->map(static function (string $rule) {
                 return explode('/', $rule);
             });
@@ -33,17 +33,6 @@ trait HasPermissions
     }
 
     /**
-     * Check if model has all permissions
-     *
-     * @param  array|string  ...$permissions
-     * @return bool
-     */
-    public function hasPermission(...$permissions): bool
-    {
-        return $this->hasPermissionTo($permissions);
-    }
-
-    /**
      * Check if model has any permissions
      *
      * @param  array|string  ...$permissions
@@ -51,7 +40,7 @@ trait HasPermissions
      */
     public function hasAnyPermission(...$permissions): bool
     {
-        $rules = $this->getAllPermissions()
+        $rules = $this->getPermissions()
             ->map(static function (string $rule) {
                 return explode('/', $rule);
             });
@@ -71,17 +60,18 @@ trait HasPermissions
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getAllPermissions(): Collection
+    public function getPermissions(): Collection
     {
         //@TODO - UWZGLĘDNIĆ ROLE
-        $roles = config('permission.roles');
-        $role = $this->{config('permission.column_name')};
+        $roles = collect(config('permission.roles'));
+        $actualRoles = $this->getRoles();
 
-        if ($role && array_key_exists($role, $roles)) {
-            return collect($roles[$role]);
-        }
-
-        return collect([]);
+        return $actualRoles
+            ->map(function ($role) use ($roles) {
+                return $roles->get($role);
+            })
+            ->flatten()
+            ->unique();
     }
 
     /**
@@ -98,13 +88,6 @@ trait HasPermissions
             return $this->matchRuleToPermission($rule, $permission);
         });
 
-        // match negative rule
-        if ($matches->filter(static function ($rule) {
-            return substr($rule[0], 0, 1) === '!';
-        })->count() > 0) {
-            return false;
-        }
-
         // match positive rule
         return $matches->count() > 0;
     }
@@ -118,7 +101,6 @@ trait HasPermissions
      */
     public function matchRuleToPermission(array $rule, array $permission): bool
     {
-        $rule[0] = str_replace('!', '', $rule[0]);
 
         $countRuleParts = count($rule);
         $countPermissionParts = count($permission);
@@ -130,18 +112,18 @@ trait HasPermissions
             }
 
             // matched up to here, and now the wildcard says "all others will match"
-            if ($rule[$i] === '#') {
+            if ($rule[$i] === '*') {
                 return true;
             }
 
-            // text does not match, and there wasn't a + to excuse it
-            if ($permission[$i] !== $rule[$i] && $rule[$i] !== '+') {
+            // text does not match
+            if ($permission[$i] !== $rule[$i]) {
                 return false;
             }
         }
 
         // make user/edit/# match user/edit
-        if ($countPermissionParts === $countRuleParts - 1 && $rule[$countRuleParts - 1] === '#') {
+        if ($countPermissionParts === $countRuleParts - 1 && $rule[$countRuleParts - 1] === '*') {
             return true;
         }
 

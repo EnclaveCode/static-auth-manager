@@ -44,8 +44,10 @@ class MiddlewareTest extends TestCase
 
     public function testUserCantAccessRoleIfHavenotRole(): void
     {
+        $incorrectRoleName = 'testRole';
+        $this->expectIncorrectRoleNameException($incorrectRoleName);
+
         $this->user->assignRole('testRole');
-        Auth::login($this->user);
 
         $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin'), 403);
     }
