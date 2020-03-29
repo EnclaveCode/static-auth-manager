@@ -23,7 +23,26 @@ class BladeTest extends TestCase
         $this->user = User::create(['email' => 'test@user.com']);
     }
 
-    public function testPermission(): void
+    /**
+     * from Spatie\Permission\Test;
+     * return compiled blade views
+     *
+     * @param string $view view name
+     * @param array $parameters vars can used in the view
+     */
+    protected function renderView(string $view, array $parameters): string
+    {
+        Artisan::call('view:clear');
+
+        if (is_string($view)) {
+            $view = view($view)->with($parameters);
+        }
+
+        return trim((string) $view);
+    }
+
+    /** @test */
+    public function permission_in_view(): void
     {
         $this->user->assignRole('admin');
         $this->be($this->user);
@@ -52,7 +71,8 @@ class BladeTest extends TestCase
         );
     }
 
-    public function testAnyPermission(): void
+    /** @test */
+    public function any_permission_in_view(): void
     {
         $this->user->assignRole('admin');
         $this->be($this->user);
@@ -65,7 +85,8 @@ class BladeTest extends TestCase
         ]), 'Test');
     }
 
-    public function testRole(): void
+    /** @test */
+    public function role_in_view(): void
     {
         $this->user->assignRole('admin');
         $this->be($this->user);
@@ -74,30 +95,13 @@ class BladeTest extends TestCase
         $this->assertEquals($this->renderView('role', ['role' => 'user']), '');
     }
 
-    public function testUnlessRole(): void
+    /** @test */
+    public function test_unless_role(): void
     {
         $this->user->assignRole('admin');
         $this->be($this->user);
 
         $this->assertEquals($this->renderView('unlessrole', ['role' => 'admin']), '');
         $this->assertEquals($this->renderView('unlessrole', ['role' => 'user']), 'Test');
-    }
-
-    /**
-     * from Spatie\Permission\Test;
-     * return compiled blade views
-     *
-     * @param string $view view name
-     * @param array $parameters vars can used in the view
-     */
-    protected function renderView(string $view, array $parameters): string
-    {
-        Artisan::call('view:clear');
-
-        if (is_string($view)) {
-            $view = view($view)->with($parameters);
-        }
-
-        return trim((string) $view);
     }
 }

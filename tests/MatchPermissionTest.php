@@ -16,14 +16,16 @@ class MatchPermissionTest extends TestCase
         $this->user = User::create(['email' => 'test@user.com']);
     }
 
-    public function testNoRules(): void
+    /** @test */
+    public function no_rules(): void
     {
         $rules = collect([]);
 
         $this->assertFalse($this->user->matchPermission($rules, $this->permission));
     }
 
-    public function testCorrectRule(): void
+    /** @test */
+    public function correct_rule(): void
     {
         $rules = collect([
             ['company', 'new'],
@@ -33,7 +35,8 @@ class MatchPermissionTest extends TestCase
         $this->assertTrue($this->user->matchPermission($rules, $this->permission));
     }
 
-    public function testWildcardRule(): void
+    /** @test */
+    public function wildcard_rule(): void
     {
         $rules = collect([
             ['company', 'new'],
@@ -43,7 +46,8 @@ class MatchPermissionTest extends TestCase
         $this->assertTrue($this->user->matchPermission($rules, $this->permission));
     }
 
-    public function testForbiddenRule(): void
+    /** @test */
+    public function forbidden_rule(): void
     {
         $rules = collect([
             ['foo', '*'],

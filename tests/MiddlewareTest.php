@@ -25,31 +25,11 @@ class MiddlewareTest extends TestCase
         $this->app['config']->set('permission.roles.admin', [
             'users/*',
         ]);
+        $this->app['config']->set('permission.roles.user', [
+            'article/*',
+        ]);
 
         $this->user = User::create(['email' => 'test@user.com']);
-    }
-
-    public function testGustCannotAccessProtectedRoute(): void
-    {
-        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin'), 403);
-    }
-
-    public function testUserCanAccessRoleIfHaveThisRole(): void
-    {
-        $this->user->assignRole('admin');
-        Auth::login($this->user);
-
-        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin'), 200);
-    }
-
-    public function testUserCantAccessRoleIfHavenotRole(): void
-    {
-        $incorrectRoleName = 'testRole';
-        $this->expectIncorrectRoleNameException($incorrectRoleName);
-
-        $this->user->assignRole('testRole');
-
-        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin'), 403);
     }
 
     protected function runMiddleware(RoleMiddleware $middleware, string $parameter): int
@@ -61,5 +41,40 @@ class MiddlewareTest extends TestCase
         } catch (HttpException $e) {
             return $e->getStatusCode();
         }
+    }
+
+    /** @test */
+    public function gust_cannot_access_protected_route(): void
+    {
+        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin'), 403);
+    }
+
+    /** @test */
+    public function user_can_access_role_if_have_this_role(): void
+    {
+        $this->user->assignRole('admin');
+        Auth::login($this->user);
+
+        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin'), 200);
+    }
+
+    /** @test */
+    public function user_can_access_role_if_have_this_roles(): void
+    {
+        $this->user->assignRole(['admin', 'user']);
+        Auth::login($this->user);
+
+        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin|user'), 200);
+    }
+
+    /** @test */
+    public function user_cant_access_role_if_have_not_role(): void
+    {
+        $incorrectRoleName = 'testRole';
+        $this->expectIncorrectRoleNameException($incorrectRoleName);
+
+        $this->user->assignRole('testRole');
+
+        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin'), 403);
     }
 }

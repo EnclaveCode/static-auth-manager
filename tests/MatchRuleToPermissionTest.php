@@ -16,7 +16,8 @@ class MatchRuleToPermissionTest extends TestCase
         $this->user = User::create(['email' => 'test@user.com']);
     }
 
-    public function testDirectRule(): void
+    /** @test */
+    public function direct_rule(): void
     {
         $rule = [
             'user',
@@ -26,7 +27,8 @@ class MatchRuleToPermissionTest extends TestCase
         $this->assertTrue($this->user->matchRuleToPermission($rule, $this->permission));
     }
 
-    public function testWildcardRule(): void
+    /** @test */
+    public function wildcard_rule(): void
     {
         $rule = [
             'user',
@@ -36,7 +38,8 @@ class MatchRuleToPermissionTest extends TestCase
         $this->assertTrue($this->user->matchRuleToPermission($rule, $this->permission));
     }
 
-    public function testWildcardAtEndRule(): void
+    /** @test */
+    public function wildcard_at_end_rule(): void
     {
         $rule = [
             'user',
@@ -47,7 +50,8 @@ class MatchRuleToPermissionTest extends TestCase
         $this->assertTrue($this->user->matchRuleToPermission($rule, $this->permission));
     }
 
-    public function testWrongRule(): void
+    /** @test */
+    public function wrong_rule(): void
     {
         $rule = [
             'user',
@@ -57,7 +61,8 @@ class MatchRuleToPermissionTest extends TestCase
         $this->assertFalse($this->user->matchRuleToPermission($rule, $this->permission));
     }
 
-    public function testMorePreciseRule(): void
+    /** @test */
+    public function more_precise_rule(): void
     {
         $rule = [
             'user',
@@ -68,7 +73,9 @@ class MatchRuleToPermissionTest extends TestCase
         $this->assertFalse($this->user->matchRuleToPermission($rule, $this->permission));
     }
 
-    public function testShortRule(): void
+
+    /** @test */
+    public function short_rule(): void
     {
         $rule = [
             'user',

@@ -21,7 +21,8 @@ class RoleTest extends TestCase
         $this->user = User::create(['email' => 'test@user.com']);
     }
 
-    public function testAssignExistentOneRole(): void
+    /** @test */
+    public function assign_existent_one_role(): void
     {
         $role = 'admin';
         $this->user->assignRole($role);
@@ -29,7 +30,8 @@ class RoleTest extends TestCase
         $this->assertEquals($this->user->getRoles(), collect($role));
     }
 
-    public function testAssignExistentManyRole(): void
+    /** @test */
+    public function assign_existent_many_role(): void
     {
         $roles = ['admin', 'user'];
 
@@ -38,7 +40,8 @@ class RoleTest extends TestCase
         $this->assertEquals($this->user->getRoles(), collect($roles));
     }
 
-    public function testAssignNonExistentRole(): void
+    /** @test */
+    public function assign_non_existent_role(): void
     {
         $roleNotExisted = 'foo';
 
@@ -49,7 +52,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->getRoles()->isEmpty());
     }
 
-    public function testAssignNonExistentRoles(): void
+    /** @test */
+    public function assign_non_existent_roles(): void
     {
         $rolesNotExisted = ['foo', 'bar'];
 
@@ -60,7 +64,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->getRoles()->isEmpty());
     }
 
-    public function testAssignOneExistedAndOneNonExistentRoles(): void
+    /** @test */
+    public function assign_one_existed_and_one_non_existent_roles(): void
     {
         $roleExisted = 'admin';
         $roleNotExisted = 'bar';
@@ -75,7 +80,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->getRoles()->isEmpty());
     }
 
-    public function testAssignedTwoExistedRolesButOneAlreadyAssigned(): void
+    /** @test */
+    public function assigned_two_existed_roles_but_one_already_assigned(): void
     {
         $roles = ['admin', 'user'];
 
@@ -88,7 +94,8 @@ class RoleTest extends TestCase
         $this->assertEquals($this->user->getRoles()->values(), collect($roles)->values());
     }
 
-    public function testAssignedTwoExistedRolesAndOneNew(): void
+    /** @test */
+    public function assigned_two_existed_roles_and_one_new(): void
     {
         $assignedRoles = ['admin', 'user'];
         $newRole = 'writer';
@@ -105,7 +112,8 @@ class RoleTest extends TestCase
         $this->assertEquals($this->user->getRoles()->values(), collect($roles)->values());
     }
 
-    public function testHasNotExistedRole(): void
+    /** @test */
+    public function has_not_existed_role(): void
     {
         $role = 'admin';
         $notExistedRole = 'foo';
@@ -118,7 +126,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->hasRole($role));
     }
 
-    public function testHasNotAssignedOneSearchedRoleInAssignedOneRole(): void
+    /** @test */
+    public function has_not_assigned_one_searched_role_in_assigned_one_role(): void
     {
         $role = 'admin';
         $searchedRole = 'moderator';
@@ -128,7 +137,8 @@ class RoleTest extends TestCase
         $this->assertFalse($this->user->hasRole($searchedRole));
     }
 
-    public function testHasNotAssignedOneSearchedRoleInAssignedManyRoles(): void
+    /** @test */
+    public function has_not_assigned_one_searched_role_in_assigned_many_roles(): void
     {
         $role = ['admin', 'user'];
         $searchedRole = 'moderator';
@@ -138,7 +148,8 @@ class RoleTest extends TestCase
         $this->assertFalse($this->user->hasRole($searchedRole));
     }
 
-    public function testHasNotAssignedManySearchedRolesInAssignedOneRoles(): void
+    /** @test */
+    public function has_not_assigned_many_searched_roles_in_assigned_one_roles(): void
     {
         $role = 'admin';
         $searchedRole = ['user', 'moderator'];
@@ -148,7 +159,8 @@ class RoleTest extends TestCase
         $this->assertFalse($this->user->hasRole($searchedRole));
     }
 
-    public function testHasNotAssignedManySearchedRolesInAssignedManyRoles(): void
+    /** @test */
+    public function has_not_assigned_many_searched_roles_in_assigned_many_roles(): void
     {
         $role = ['admin', 'writer'];
         $searchedRole = ['user', 'moderator'];
@@ -158,7 +170,8 @@ class RoleTest extends TestCase
         $this->assertFalse($this->user->hasRole($searchedRole));
     }
 
-    public function testHasAssignedOneSearchedRoleInAssignedManyRoles(): void
+    /** @test */
+    public function has_assigned_one_searched_role_in_assigned_many_roles(): void
     {
         $roles = ['admin', 'user'];
 
@@ -168,7 +181,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->hasRole('user'));
     }
 
-    public function testHasAssignedManySearchedRoleInAssignedManyRoles(): void
+    /** @test */
+    public function has_assigned_many_searched_role_in_assigned_many_roles(): void
     {
         $roles = ['admin', 'user'];
         $searchedRole = ['user', 'moderator'];
@@ -178,7 +192,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->hasRole($searchedRole));
     }
 
-    public function testHasAssignedManySearchedRoleInAssignedOneRole(): void
+    /** @test */
+    public function has_assigned_many_searched_role_in_assigned_one_role(): void
     {
         $roles = 'user';
         $searchedRole = ['user', 'moderator'];
@@ -188,7 +203,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->hasRole($searchedRole));
     }
 
-    public function testHasAssignedOneSearchedRoleInAssignedOneRole(): void
+    /** @test */
+    public function has_assigned_one_searched_role_in_assigned_one_role(): void
     {
         $role = 'user';
         $searchedRole = 'user';
@@ -198,7 +214,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->hasRole($searchedRole));
     }
 
-    public function testDetachOneRoleIfHasOneRole(): void
+    /** @test */
+    public function detach_one_role_if_has_one_role(): void
     {
         $role = 'user';
         $this->user->assignRole($role);
@@ -210,7 +227,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->getRoles()->isEmpty());
     }
 
-    public function testDetachManyRolesWithOneExistedIfHasOneRole(): void
+    /** @test */
+    public function detach_many_roles_with_one_existed_if_has_one_role(): void
     {
         $role = 'user';
 
@@ -225,7 +243,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->getRoles()->isEmpty());
     }
 
-    public function testDetachManyRolesWithOneExistedIfHasManyRoles(): void
+    /** @test */
+    public function detach_many_roles_with_one_existed_if_has_many_roles(): void
     {
         $roles = ['user', 'writer'];
 
@@ -242,7 +261,8 @@ class RoleTest extends TestCase
         $this->assertEquals($this->user->getRoles()->values(), collect($rolesDiff)->values());
     }
 
-    public function testDetachManyRolesWithAllExistedIfHasManyRoles(): void
+    /** @test */
+    public function detach_many_roles_with_all_existed_if_has_many_roles(): void
     {
         $role = ['user', 'writer'];
 
@@ -275,7 +295,8 @@ class RoleTest extends TestCase
         $this->assertEquals($this->user->getRoles(), collect($rolesDiff)->values());
     }
 
-    public function testDetachOneRolesIfHasManyRole(): void
+    /** @test */
+    public function detach_one_roles_if_has_many_role(): void
     {
         $role = ['user', 'writer', 'admin'];
 
@@ -292,7 +313,8 @@ class RoleTest extends TestCase
         $this->assertEquals($this->user->getRoles(), collect($rolesDiff)->sort()->values());
     }
 
-    public function testDetachOneNonExistedRole(): void
+    /** @test */
+    public function detach_one_non_existed_role(): void
     {
         $roles = ['user', 'writer', 'admin'];
 
@@ -309,7 +331,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->hasRole($roles));
     }
 
-    public function testDetachManyNonExistedRole(): void
+    /** @test */
+    public function detach_many_non_existed_role(): void
     {
         $roles = ['user', 'writer', 'admin'];
 
@@ -329,7 +352,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->hasRole($roles));
     }
 
-    public function testDetachManyNonExistedAndOneExistedRole(): void
+    /** @test */
+    public function detach_many_non_existed_and_one_existed_role(): void
     {
         $roles = ['user', 'writer', 'admin'];
 
@@ -348,7 +372,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->hasRole($roles));
     }
 
-    public function testDetachManyNonExistedAndOneExistedRoleAnotherCase(): void
+    /** @test */
+    public function detach_many_non_existed_and_one_existed_role_another_case(): void
     {
         $roles = ['user', 'writer', 'admin'];
 
@@ -367,7 +392,8 @@ class RoleTest extends TestCase
         $this->assertTrue($this->user->hasRole($roles));
     }
 
-    public function testNotHasRolesWhenUserDoesNotHaveAny(): void
+    /** @test */
+    public function not_has_roles_when_user_does_not_have_any(): void
     {
         $this->assertTrue($this->user->getRoles()->isEmpty());
     }
