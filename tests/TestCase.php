@@ -78,6 +78,7 @@ class TestCase extends OrchestraTestCase
     protected function expectIncorrectRoleNameException($notExistedRoles)
     {
         $this->expectException(IncorrectRoleNameException::class);
-        $this->expectExceptionMessage('Role: ' . collect($notExistedRoles)->flatten()->toJson() . 'does not exist');
+        $message = 'Role: ' . collect($notExistedRoles)->flatten()->toJson() . ' does not exist';
+        $this->expectExceptionMessage($message);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Enclave\StaticAuthManager\Traits;
 
+use Enclave\StaticAuthManager\Exceptions\IncorrectRoleNameException;
 use Illuminate\Support\Collection;
 
 trait HasRoles
@@ -17,15 +18,41 @@ trait HasRoles
      */
     public function assignRole(...$roles)
     {
-
-        //@TODO Assign role
-        $rolesInConfig = config('permission.roles');
         $roles = collect($roles)
             ->flatten();
 
+        $this->checkIfRolesExistsInConfig($roles);
 
+        $currentRoles = $this->getRoles();
+
+        $concatedRoles = $roles->concat($currentRoles)->unique();
+
+        $this->addRolesToModel($concatedRoles);
 
         return $this;
+    }
+
+    private function checkIfRolesExistsInConfig(Collection $roles)
+    {
+        $rolesInConfig = $this->getAllRolesInConfig();
+
+        $rolesDiff = $roles->diff($rolesInConfig);
+
+        if ($rolesDiff->count() >= 1) {
+            throw new IncorrectRoleNameException('Role: ' . collect($rolesDiff)->flatten()->toJson() . ' does not exist');
+        }
+    }
+
+    private function getAllRolesInConfig()
+    {
+        return collect(config('permission.roles'))->keys();
+    }
+
+    private function addRolesToModel(Collection $roles)
+    {
+        $this->{config('permission.column_name')} = $roles->values()->toJson();
+
+        $this->save();
     }
 
     /**
@@ -37,10 +64,14 @@ trait HasRoles
     public function hasRole(...$roles): bool
     {
         $currentRoles = $this->getRoles();
-        $roles = collect($roles);
+        $roles = collect($roles)->flatten();
 
-        return $currentRoles
+        $this->checkIfRolesExistsInConfig($roles);
+
+        return $roles
             ->flatten()
+            ->values()
+            ->sort()
             ->filter(function ($role) use ($currentRoles) {
                 return $currentRoles->contains($role);
             })
@@ -56,7 +87,9 @@ trait HasRoles
     {
         $currentRolesJson = $this->{config('permission.column_name')};
         $currentRoles = json_decode($currentRolesJson);
-        $roles = collect($currentRoles);
+        $roles = collect($currentRoles)
+            ->values()
+            ->sort();
 
         return $roles;
     }
@@ -70,7 +103,18 @@ trait HasRoles
     public function detachRole(...$roles)
     {
 
-        // @TODO Detach role
+        $roles = collect($roles)
+            ->flatten();
+
+        $this->checkIfRolesExistsInConfig($roles);
+
+        $currentRoles = $this->getRoles();
+
+        $concatedRoles = $currentRoles->filter(function ($role) use ($roles) {
+            return !$roles->contains($role);
+        });
+
+        $this->addRolesToModel($concatedRoles);
 
         return $this;
     }
