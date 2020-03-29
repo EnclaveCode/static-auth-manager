@@ -18,16 +18,23 @@ $user->assignRole('admin');
 $user->hasRole('admin'); // true
 ```
 
+```php
+$user->assignRole(['admin','user']);
+
+$user->hasRole('admin'); // true
+$user->hasRole('user'); // true
+
+```
+
 You can define roles and permissions by code at `config/permission.php`.
 
 ```php
 'role' => [
   'admin' => [
-    'news/#', // Allow all paths beginning with news/
+    'news/*', // Allow all paths beginning with news/
   ],
   'editor' => [
-    'news/#',
-    '!news/delete', // Explicitly forbid news/delete
+    'news/*',
   ],
   'user' => [
     'news/show', // Explicitly allow news/show
@@ -38,12 +45,14 @@ You can define roles and permissions by code at `config/permission.php`.
 You can check permissions by
 
 ```php
-$admin->hasPermission('news/delete'); // true
-$editor->hasPermission('news/delete'); // false
-$user->hasPermission('news/delete'); // false
+$admin->hasPermissionTo('news/delete'); // true
+$editor->hasPermissionTo('news/delete'); // false
+$user->hasPermissionTo('news/delete'); // false
 ```
 
 ## Installation
+
+//@TODO Change instalation
 
 ```bash
 composer require enclave/laravel-static-permission
@@ -83,12 +92,18 @@ You can define the roles in the `config/permission.php` file.
   'admin' => [],
 ],
 ```
-#### Assign role
+#### Assign role/roles
 
 Add a role to a model.
 
 ```php
 $model->assignRole('admin');
+```
+
+Add a roles to a model.
+
+```php
+$model->assignRole(['admin','user']);
 ```
 
 #### Check role
@@ -97,6 +112,8 @@ You can check the roles via:
 
 ```php
 $model->hasRole('admin');
+$model->hasRole(['admin','user']);
+
 
 $model->getRoles(); // return admin
 ```
@@ -108,11 +125,11 @@ Permissions are based on the MQTT syntax. Permissions are specified as path. Thu
 #### Check permissions
 
 ```php
-$model->hasPermission('users/show/email');
+$model->hasPermissionTo('users/show/email');
 ```
 
 ```php
-$model->hasPermission(['users/show', 'users/edit']);
+$model->hasPermissionTo(['users/show', 'users/edit']);
 ```
 
 ```php
@@ -125,9 +142,7 @@ $model->hasAnyPermission(['users/show', 'users/edit']);
 
 #### Configuration
 
-- `+` Wildcard for one level
-- `#` Wildcard for everything following
-- `!` Before the permission - prohibits permission
+- `*` Wildcard for everything following
 
 You can define the role permissions in the `config/permission.php` file.
 
@@ -136,11 +151,10 @@ You can define the role permissions in the `config/permission.php` file.
 
 'roles' => [
   'role_name' => [
-    'users/+/foo'
+    'users/*'
   ],
   'admin' => [
-    'users/#',
-    '!users/create',
+    'users/create',
   ],
 ],
 ```
@@ -225,14 +239,10 @@ return [
     /**
      * Roles with permissions
      *
-     * - `+` Wildcard one level
-     * - `#` Wildcard everything following
-     * - `!` Before the permission - prohibits permission
+     * - `*` Wildcard everything following
      *
      * 'admin' => [
-     *     'users/#',
-     *     'users/+/field',
-     *     '!users/create'
+     *     'users/*',
      * ]
      */
     'roles' => [],
@@ -246,10 +256,6 @@ return [
 ```bash
 composer test
 ```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for details.
 
 ## Contributing
 

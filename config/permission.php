@@ -9,18 +9,10 @@ return [
     /**
      * Roles with permission as path
      *
-     * - `+` Wildcard one level //@TODO - DO USUNIĘCIA
-     * - `#` Wildcard everything following //@TODO - ZMIANA NA GWIAZDKĘ
-     * - `!` Before the permission - prohibits permission //@TODO - DO USUNIĘCIA
+     * - `*` Wildcard everything following //@TODO - ZMIANA NA GWIAZDKĘ
      *
      * 'admin' => [
-     *     'users/#',
-     *     'users/+/field',
-     *     '!users/create',
-     * ]
-     * ---------------
-     * 'admin' => [
-     *      'users/#',
+     *      'users/*',
      * ],
      * 'user' => [
      *     'users/create'
