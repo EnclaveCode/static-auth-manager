@@ -1,6 +1,6 @@
 <?php
 
-namespace Enclave\StaticAuthManager\Exceptions;
+namespace EnclaveCode\StaticAuthManager\Exceptions;
 
 use Exception;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Enclave\StaticAuthManager\Traits;
+namespace EnclaveCode\StaticAuthManager\Traits;
 
-use Enclave\StaticAuthManager\Exceptions\IncorrectRoleNameException;
+use EnclaveCode\StaticAuthManager\Exceptions\IncorrectRoleNameException;
 use Illuminate\Support\Collection;
 
 trait HasRoles

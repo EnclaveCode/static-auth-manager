@@ -57,7 +57,7 @@ $user->hasPermissionTo('news/delete'); // false
 //@TODO Change instalation
 
 ```bash
-composer require enclave/laravel-static-permission
+composer require enclave-code/laravel-static-permission
 ```
 
 Older than Laravel 5.5 need a service provider registration.
@@ -66,7 +66,7 @@ Older than Laravel 5.5 need a service provider registration.
 // config/app.php
 
 'providers' => [
-  Enclave\StaticAuthManager\Providers\PermissionServiceProvider::class,
+  EnclaveCode\StaticAuthManager\Providers\PermissionServiceProvider::class,
 ];
 ```
 
@@ -223,8 +223,8 @@ You can use several permissions too.
 ### Middleware
 Add the middleware to your `src/Http/Kernel.php`
 ```php
-use Enclave\StaticAuthManager\Middlewares\HasRoleMiddleware;
-use Enclave\StaticAuthManager\Middlewares\HasAnyPermissionMiddleware;
+use EnclaveCode\StaticAuthManager\Middlewares\HasRoleMiddleware;
+use EnclaveCode\StaticAuthManager\Middlewares\HasAnyPermissionMiddleware;
 
 
 class Kernel extends HttpKernel

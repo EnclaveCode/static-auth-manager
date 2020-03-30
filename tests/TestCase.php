@@ -1,9 +1,9 @@
 <?php
 
-namespace Enclave\StaticAuthManager\Test;
+namespace EnclaveCode\StaticAuthManager\Test;
 
-use Enclave\StaticAuthManager\Exceptions\IncorrectRoleNameException;
-use Enclave\StaticAuthManager\Providers\PermissionServiceProvider;
+use EnclaveCode\StaticAuthManager\Exceptions\IncorrectRoleNameException;
+use EnclaveCode\StaticAuthManager\Providers\PermissionServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;

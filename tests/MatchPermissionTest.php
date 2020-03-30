@@ -1,6 +1,6 @@
 <?php
 
-namespace Enclave\StaticAuthManager\Test;
+namespace EnclaveCode\StaticAuthManager\Test;
 
 class MatchPermissionTest extends TestCase
 {

@@ -1,7 +1,9 @@
 {
-  "name": "enclave/static-auth-manager",
+  "name": "enclave-code/static-auth-manager",
   "description": "Static manage roles and permission in Laravel",
   "keywords": [
+    "enclaveCode",
+    "enclave-code",
     "enclave",
     "permission",
     "laravel",
@@ -25,12 +27,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Enclave\\StaticAuthManager\\": "src"
+      "EnclaveCode\\StaticAuthManager\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Enclave\\StaticAuthManager\\Test\\": "tests"
+      "EnclaveCode\\StaticAuthManager\\Test\\": "tests"
     }
   },
   "scripts": {
@@ -42,7 +44,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Enclave\\StaticAuthManager\\Providers\\PermissionServiceProvider"
+        "EnclaveCode\\StaticAuthManager\\Providers\\PermissionServiceProvider"
       ]
     }
   }
