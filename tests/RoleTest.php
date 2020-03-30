@@ -31,6 +31,33 @@ class RoleTest extends TestCase
     }
 
     /** @test */
+    public function assign_existent_one_role_and_check_if_json_and_correct_structure(): void
+    {
+        $role = 'admin';
+        $this->user->assignRole($role);
+
+        $roleJson = $this->user->{config('permission.column_name')};
+        $this->assertJson($roleJson);
+
+        $decodedRole = json_decode($roleJson, true);
+        $this->assertTrue(collect($decodedRole)->contains('admin'));
+    }
+
+    /** @test */
+    public function assign_existent_many_role_and_check_if_json_and_correct_structure(): void
+    {
+        $role = ['admin', 'user'];
+        $this->user->assignRole($role);
+
+        $roleJson = $this->user->{config('permission.column_name')};
+        $this->assertJson($roleJson);
+
+        $decodedRole = json_decode($roleJson, true);
+        $this->assertTrue(collect($decodedRole)->contains('admin'));
+        $this->assertTrue(collect($decodedRole)->contains('user'));
+    }
+
+    /** @test */
     public function assign_existent_many_role(): void
     {
         $roles = ['admin', 'user'];
