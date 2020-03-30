@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Enclave\StaticAuthManager\Middlewares\RoleMiddleware;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class MiddlewareTest extends TestCase
+class RoleMiddlewareTest extends TestCase
 {
 
     /**
