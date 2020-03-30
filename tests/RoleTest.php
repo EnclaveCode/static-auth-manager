@@ -31,6 +31,18 @@ class RoleTest extends TestCase
     }
 
     /** @test */
+    public function assign_duplicate_existent_one_role(): void
+    {
+        $role = 'admin';
+        $this->user->assignRole($role);
+        $this->user->assignRole($role);
+        $this->user->assignRole($role);
+
+
+        $this->assertEquals($this->user->getRoles(), collect($role));
+    }
+
+    /** @test */
     public function assign_existent_one_role_and_check_if_json_and_correct_structure(): void
     {
         $role = 'admin';
