@@ -300,7 +300,7 @@ composer test
 
 ## Credits
 
-Primary forked from [sourceboat/laravel-static-permission](https://github.com/sourceboat/laravel-static-permission).
+Primarily forked from [sourceboat/laravel-static-permission](https://github.com/sourceboat/laravel-static-permission).
 
 
 ## License
