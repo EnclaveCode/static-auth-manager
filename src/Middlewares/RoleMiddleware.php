@@ -5,6 +5,7 @@ namespace Enclave\StaticAuthManager\Middlewares;
 use Closure;
 use Illuminate\Http\Request;
 
+//@TODO create middleware for perrmisions
 class RoleMiddleware
 {
     /**
