@@ -34,54 +34,74 @@ class PermissionServiceProvider extends ServiceProvider
 
     protected function registerBladeExtensions(): void
     {
-        $this->app->afterResolving('blade.compiler', static function (BladeCompiler $bladeCompiler): void {
-            // role
-            $bladeCompiler->directive('role', static function (string $arguments): string {
-                return sprintf(
-                    '<?php if (Auth::check() && Auth::user()->hasRole(%s)): ?>',
-                    $arguments
-                );
-            });
 
-            $bladeCompiler->directive('endrole', static function (): string {
-                return '<?php endif; ?>';
-            });
+        $bladeExtensions = static function (BladeCompiler $bladeCompiler): void {
+            self::registerRoleBladeExtensions($bladeCompiler);
+            self::registerUnlessRoleBladeExtensions($bladeCompiler);
+            self::registerPermissionBladeExtensions($bladeCompiler);
+            self::registerAnyPermissionBladeExtensions($bladeCompiler);
+        };
 
-            // unlessrole
-            $bladeCompiler->directive('unlessrole', static function (string $arguments): string {
-                return sprintf(
-                    '<?php if (Auth::check() && !Auth::user()->hasRole(%s)): ?>',
-                    $arguments
-                );
-            });
+        $this->app->afterResolving('blade.compiler', $bladeExtensions);
+    }
 
-            $bladeCompiler->directive('endunlessrole', static function () {
-                return '<?php endif; ?>';
-            });
+    protected static function registerRoleBladeExtensions(BladeCompiler $bladeCompiler)
+    {
+        // role
+        $bladeCompiler->directive('role', static function (string $arguments): string {
+            return sprintf(
+                '<?php if (Auth::check() && Auth::user()->hasRole(%s)): ?>',
+                $arguments
+            );
+        });
 
-            // permission
-            $bladeCompiler->directive('permission', static function (string $arguments): string {
-                return sprintf(
-                    '<?php if (Auth::check() && Auth::user()->hasPermissionTo(explode(\'|\', %s))): ?>',
-                    $arguments
-                );
-            });
+        $bladeCompiler->directive('endrole', static function (): string {
+            return '<?php endif; ?>';
+        });
+    }
 
-            $bladeCompiler->directive('endpermission', static function (): string {
-                return '<?php endif; ?>';
-            });
+    protected static function registerUnlessRoleBladeExtensions(BladeCompiler $bladeCompiler)
+    {
+        // unlessrole
+        $bladeCompiler->directive('unlessrole', static function (string $arguments): string {
+            return sprintf(
+                '<?php if (Auth::check() && !Auth::user()->hasRole(%s)): ?>',
+                $arguments
+            );
+        });
 
-            // anypermission
-            $bladeCompiler->directive('anypermission', static function (string $arguments): string {
-                return sprintf(
-                    '<?php if (Auth::check() && Auth::user()->hasAnyPermission(explode(\'|\', %s))): ?>',
-                    $arguments
-                );
-            });
+        $bladeCompiler->directive('endunlessrole', static function () {
+            return '<?php endif; ?>';
+        });
+    }
 
-            $bladeCompiler->directive('endanypermission', static function (): string {
-                return '<?php endif; ?>';
-            });
+    protected static function registerPermissionBladeExtensions(BladeCompiler $bladeCompiler)
+    {
+        // permission
+        $bladeCompiler->directive('permission', static function (string $arguments): string {
+            return sprintf(
+                '<?php if (Auth::check() && Auth::user()->hasPermissionTo(explode(\'|\', %s))): ?>',
+                $arguments
+            );
+        });
+
+        $bladeCompiler->directive('endpermission', static function (): string {
+            return '<?php endif; ?>';
+        });
+    }
+
+    protected static function registerAnyPermissionBladeExtensions(BladeCompiler $bladeCompiler)
+    {
+        // anyPermission
+        $bladeCompiler->directive('anypermission', static function (string $arguments): string {
+            return sprintf(
+                '<?php if (Auth::check() && Auth::user()->hasAnyPermission(explode(\'|\', %s))): ?>',
+                $arguments
+            );
+        });
+
+        $bladeCompiler->directive('endanypermission', static function (): string {
+            return '<?php endif; ?>';
         });
     }
 }
