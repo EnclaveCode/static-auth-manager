@@ -2,13 +2,13 @@
 
 namespace Enclave\StaticAuthManager\Test;
 
-use Enclave\StaticAuthManager\Middlewares\RoleMiddleware;
+use Enclave\StaticAuthManager\Middlewares\HasRoleMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class RoleMiddlewareTest extends TestCase
+class HasRoleMiddlewareTest extends TestCase
 {
 
     /**
@@ -20,7 +20,7 @@ class RoleMiddlewareTest extends TestCase
     {
         parent::setUp();
 
-        $this->roleMiddleware = new RoleMiddleware($this->app);
+        $this->hasRoleMiddleware = new HasRoleMiddleware($this->app);
 
         $this->app['config']->set('permission.roles.admin', [
             'users/*',
@@ -32,7 +32,7 @@ class RoleMiddlewareTest extends TestCase
         $this->user = User::create(['email' => 'test@user.com']);
     }
 
-    protected function runMiddleware(RoleMiddleware $middleware, string $parameter): int
+    protected function runMiddleware(HasRoleMiddleware $middleware, string $parameter): int
     {
         try {
             return $middleware->handle(new Request, static function () {
@@ -46,7 +46,7 @@ class RoleMiddlewareTest extends TestCase
     /** @test */
     public function gust_cannot_access_protected_route(): void
     {
-        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin'), 403);
+        $this->assertEquals($this->runMiddleware($this->hasRoleMiddleware, 'admin'), 403);
     }
 
     /** @test */
@@ -55,7 +55,7 @@ class RoleMiddlewareTest extends TestCase
         $this->user->assignRole('admin');
         Auth::login($this->user);
 
-        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin'), 200);
+        $this->assertEquals($this->runMiddleware($this->hasRoleMiddleware, 'admin'), 200);
     }
 
     /** @test */
@@ -64,7 +64,7 @@ class RoleMiddlewareTest extends TestCase
         $this->user->assignRole('admin');
         Auth::login($this->user);
 
-        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin|user'), 200);
+        $this->assertEquals($this->runMiddleware($this->hasRoleMiddleware, 'admin|user'), 200);
     }
 
     /** @test */
@@ -73,7 +73,7 @@ class RoleMiddlewareTest extends TestCase
         $this->user->assignRole(['admin', 'user']);
         Auth::login($this->user);
 
-        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin|user'), 200);
+        $this->assertEquals($this->runMiddleware($this->hasRoleMiddleware, 'admin|user'), 200);
     }
 
     /** @test */
@@ -84,6 +84,6 @@ class RoleMiddlewareTest extends TestCase
 
         $this->user->assignRole('testRole');
 
-        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin'), 403);
+        $this->assertEquals($this->runMiddleware($this->hasRoleMiddleware, 'admin'), 403);
     }
 }

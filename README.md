@@ -223,7 +223,9 @@ You can use several permissions too.
 ### Middleware
 Add the middleware to your `src/Http/Kernel.php`
 ```php
-use Enclave\StaticAuthManager\Middlewares\RoleMiddleware;
+use Enclave\StaticAuthManager\Middlewares\HasRoleMiddleware;
+use Enclave\StaticAuthManager\Middlewares\HasAnyPermissionMiddleware;
+
 
 class Kernel extends HttpKernel
 {
@@ -231,7 +233,7 @@ class Kernel extends HttpKernel
   protected $routeMiddleware = [
     ...
     'permission' => HasAnyPermissionMiddleware::class
-    'role' => RoleMiddleware::class
+    'role' => HasRoleMiddleware::class
 
   ]
 
@@ -240,10 +242,21 @@ class Kernel extends HttpKernel
 
 And use it like 
 ```php
-// If user has admin or user role
+// If user has 'admin' or 'user' role
 Route::group(['middleware' => ['role:admin|user']], function () {
     //
 })
+
+// If user has 'admin' role
+Route::group(['middleware' => ['role:admin']], function () {
+    //
+})
+
+// If user has 'user/create'
+Route::group(['middleware' => ['permission:create/user']], function () {
+    //
+})
+
 // If user has 'user/create' or 'user/edit'
 Route::group(['middleware' => ['permission:create/user|user/edit']], function () {
     //

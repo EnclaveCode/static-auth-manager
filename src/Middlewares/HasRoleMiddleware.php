@@ -5,7 +5,7 @@ namespace Enclave\StaticAuthManager\Middlewares;
 use Closure;
 use Illuminate\Http\Request;
 
-class RoleMiddleware
+class HasRoleMiddleware
 {
     /**
      * Handle an incoming request.
