@@ -5,7 +5,7 @@ namespace Enclave\StaticAuthManager\Middlewares;
 use Closure;
 use Illuminate\Http\Request;
 
-class RoleMiddleware
+class HasAnyPermissionMiddleware
 {
     /**
      * Handle an incoming request.
@@ -24,7 +24,7 @@ class RoleMiddleware
         $roles = collect(explode('|', $roles));
         $user = auth()->user();
 
-        if (!$user->hasRole($roles)) {
+        if (!$user->hasAnyPermission($roles)) {
             abort(403);
         }
 

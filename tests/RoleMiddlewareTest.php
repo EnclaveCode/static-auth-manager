@@ -2,10 +2,10 @@
 
 namespace Enclave\StaticAuthManager\Test;
 
+use Enclave\StaticAuthManager\Middlewares\RoleMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Enclave\StaticAuthManager\Middlewares\RoleMiddleware;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RoleMiddlewareTest extends TestCase
@@ -60,6 +60,15 @@ class RoleMiddlewareTest extends TestCase
 
     /** @test */
     public function user_can_access_role_if_have_this_roles(): void
+    {
+        $this->user->assignRole('admin');
+        Auth::login($this->user);
+
+        $this->assertEquals($this->runMiddleware($this->roleMiddleware, 'admin|user'), 200);
+    }
+
+    /** @test */
+    public function user_can_access_role_if_have_many_roles(): void
     {
         $this->user->assignRole(['admin', 'user']);
         Auth::login($this->user);
