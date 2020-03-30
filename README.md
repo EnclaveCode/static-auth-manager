@@ -57,7 +57,11 @@ $user->hasPermissionTo('news/delete'); // false
 //@TODO Change instalation
 
 ```bash
-composer require enclave-code/laravel-static-permission
+# Public add library
+composer require enclave-code/static-auth-manager
+
+# Public vendors
+php artisan vendor:publish
 ```
 
 Older than Laravel 5.5 need a service provider registration.
@@ -68,10 +72,6 @@ Older than Laravel 5.5 need a service provider registration.
 'providers' => [
   EnclaveCode\StaticAuthManager\Providers\PermissionServiceProvider::class,
 ];
-```
-
-```php
-php artisan vendor:publish
 ```
 
 ## Usage
