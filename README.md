@@ -1,6 +1,5 @@
 # Laravel StaticAuthManager
 
-
 Manage user permissions and roles in your Laravel application by domain driven rules.
 
 * [Installation](#installation)
@@ -8,6 +7,7 @@ Manage user permissions and roles in your Laravel application by domain driven r
   * [Using roles](#using-roles)
   * [Using permissions](#using-permissions)
   * [Using Blade directives](#using-blade-directives)
+  * [Using middleware](#Middleware)
 * [Config](#config)
 
 ## Example
@@ -220,7 +220,7 @@ You can use several permissions too.
 @endanypermission
 ```
 
-#### Middleware
+### Middleware
 Add the middleware to your `src/Http/Kernel.php`
 ```php
 use Enclave\StaticAuthManager\Middlewares\RoleMiddleware;
