@@ -221,17 +221,13 @@ You can use several permissions too.
 ### Middleware
 Add the middleware to your `src/Http/Kernel.php`
 ```php
-use EnclaveCode\StaticAuthManager\Middlewares\HasRoleMiddleware;
-use EnclaveCode\StaticAuthManager\Middlewares\HasAnyPermissionMiddleware;
-
-
 class Kernel extends HttpKernel
 {
 ... 
   protected $routeMiddleware = [
     ...
-    'permission' => HasAnyPermissionMiddleware::class
-    'role' => HasRoleMiddleware::class
+    'permission' => \EnclaveCode\StaticAuthManager\Middlewares\HasAnyPermissionMiddleware::class,
+    'role' => \EnclaveCode\StaticAuthManager\Middlewares\HasRoleMiddleware::class
 
   ]
 
@@ -309,6 +305,10 @@ composer test
 
 ```
 
+## Todo
+- Add new migration to user with new column with role
+- Describe how roles and permissions work in readme
+ 
 ## Credits
 
 Primarily forked from [sourceboat/laravel-static-permission](https://github.com/sourceboat/laravel-static-permission).
