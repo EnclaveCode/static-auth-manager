@@ -54,10 +54,8 @@ $user->hasPermissionTo('news/delete'); // false
 
 ## Installation
 
-//@TODO Change instalation
-
 ```bash
-# Public add library
+# Add library
 composer require enclave-code/static-auth-manager
 
 # Public vendors
