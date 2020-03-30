@@ -1,23 +1,25 @@
-# laravel-static-permission
+# Laravel StaticAuthManager
 
 
 Manage user permissions and roles in your Laravel application by domain driven rules.
 
 * [Installation](#installation)
 * [Usage](#usage)
-  * [Usign roles](#using-roles)
-  * [Usign permissions](#using-permissions)
+  * [Using roles](#using-roles)
+  * [Using permissions](#using-permissions)
   * [Using Blade directives](#using-blade-directives)
 * [Config](#config)
 
 ## Example
 
+### Add single role
 ```php
 $user->assignRole('admin');
 
 $user->hasRole('admin'); // true
 ```
 
+### Add many roles
 ```php
 $user->assignRole(['admin','user']);
 
@@ -106,16 +108,35 @@ Add a roles to a model.
 $model->assignRole(['admin','user']);
 ```
 
-#### Check role
+#### Check role/roles
 
 You can check the roles via:
 
 ```php
 $model->hasRole('admin');
+
+$model->getRoles(); // return collection(['admin'])
+
+```
+
+```php
 $model->hasRole(['admin','user']);
 
 
-$model->getRoles(); // return admin
+$model->getRoles(); // return collection(['admin','user']);
+
+```
+
+#### Detach role/roles
+
+You can detach the roles via:
+
+```php
+$model->assignRole(['admin','user']);
+$model->detachRole('admin');
+
+
+$model->getRoles(); // return collection(['user'])
 ```
 
 ### Using permissions
@@ -203,12 +224,15 @@ You can use several permissions too.
 Add the middleware to your `src/Http/Kernel.php`
 ```php
 use Enclave\StaticAuthManager\Middlewares\RoleMiddleware;
+
 class Kernel extends HttpKernel
 {
 ... 
   protected $routeMiddleware = [
     ...
+    'permission' => HasAnyPermissionMiddleware::class
     'role' => RoleMiddleware::class
+
   ]
 
 }
@@ -216,10 +240,14 @@ class Kernel extends HttpKernel
 
 And use it like 
 ```php
-Route::group(['middleware' => ['role:admin']], function () {
+// If user has admin or user role
+Route::group(['middleware' => ['role:admin|user']], function () {
     //
 })
-
+// If user has 'user/create' or 'user/edit'
+Route::group(['middleware' => ['permission:create/user|user/edit']], function () {
+    //
+})
 ```
 
 ## Config
@@ -232,18 +260,22 @@ Example Config
 
 return [
     /**
-     * Column name of the model
+     * DB Column name from model
      */
-    'column_name' => 'role',
+    'column_name' => env('SAM_ROLE_COLUMN_NAME', 'role'),
 
     /**
-     * Roles with permissions
+     * Roles with permission as path
      *
      * - `*` Wildcard everything following
      *
      * 'admin' => [
-     *     'users/*',
+     *      'users/*',
+     * ],
+     * 'user' => [
+     *     'users/create'
      * ]
+     *
      */
     'roles' => [],
 
@@ -251,25 +283,25 @@ return [
 
 ```
 
+Additional config in .env
+```bash
+# StaticAuthManager - column name in user model
+SAM_ROLE_COLUMN_NAME='role' 
+```
+
 ## Testing
 
 ```bash
 composer test
-```
+# same to
+./vendor/bin/phpunit
 
-## Contributing
-
-```bash
-composer lint:phpcs
-composer lint:phpmd
 ```
 
 ## Credits
 
-This package is heavily inspired by [Spatie / laravel-permission](https://github.com/spatie/laravel-permission).
+Primary forked from [sourceboat/laravel-static-permission](https://github.com/sourceboat/laravel-static-permission).
 
-- [Philipp Kübler](https://github.com/pkuebler)
-- [All Contributors](https://github.com/enclave/laravel-static-permission/graphs/contributors)
 
 ## License
 

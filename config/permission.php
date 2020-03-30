@@ -9,7 +9,7 @@ return [
     /**
      * Roles with permission as path
      *
-     * - `*` Wildcard everything following //@TODO - ZMIANA NA GWIAZDKĘ
+     * - `*` Wildcard everything following
      *
      * 'admin' => [
      *      'users/*',

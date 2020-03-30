@@ -62,7 +62,6 @@ trait HasPermissions
      */
     public function getPermissions(): Collection
     {
-        //@TODO - UWZGLĘDNIĆ ROLE
         $roles = collect(config('permission.roles'));
         $actualRoles = $this->getRoles();
 

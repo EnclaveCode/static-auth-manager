@@ -1,6 +1,6 @@
 {
   "name": "enclave/static-auth-manager",
-  "description": "Define laravel permissions and roles by code",
+  "description": "Static manage roles and permission in Laravel",
   "keywords": [
     "enclave",
     "permission",
