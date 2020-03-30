@@ -1,6 +1,6 @@
 <?php
 
-namespace Enclave\StaticAuthManager;
+namespace Enclave\StaticAuthManager\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -18,7 +18,7 @@ class PermissionServiceProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__ . '/../config/permission.php' => config_path('permission.php'),
+            __DIR__ . '/../../config/permission.php' => config_path('permission.php'),
         ], 'config');
     }
 
@@ -27,7 +27,7 @@ class PermissionServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/permission.php', 'permission');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/permission.php', 'permission');
 
         $this->registerBladeExtensions();
     }

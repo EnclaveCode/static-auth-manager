@@ -42,7 +42,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Enclave\\StaticAuthManager\\PermissionServiceProvider"
+        "Enclave\\StaticAuthManager\\Providers\\PermissionServiceProvider"
       ]
     }
   }

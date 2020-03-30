@@ -3,7 +3,7 @@
 namespace Enclave\StaticAuthManager\Test;
 
 use Enclave\StaticAuthManager\Exceptions\IncorrectRoleNameException;
-use Enclave\StaticAuthManager\PermissionServiceProvider;
+use Enclave\StaticAuthManager\Providers\PermissionServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;

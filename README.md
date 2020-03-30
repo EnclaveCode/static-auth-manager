@@ -64,7 +64,7 @@ Older than Laravel 5.5 need a service provider registration.
 // config/app.php
 
 'providers' => [
-  Enclave\StaticAuthManager\PermissionServiceProvider::class,
+  Enclave\StaticAuthManager\Providers\PermissionServiceProvider::class,
 ];
 ```
 
