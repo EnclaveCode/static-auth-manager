@@ -226,8 +226,8 @@ class Kernel extends HttpKernel
 ... 
   protected $routeMiddleware = [
     ...
-    'permission' => \EnclaveCode\StaticAuthManager\Middlewares\HasAnyPermissionMiddleware::class,
-    'role' => \EnclaveCode\StaticAuthManager\Middlewares\HasRoleMiddleware::class
+    'permission' => \EnclaveCode\StaticAuthManager\Middleware\HasAnyPermissionMiddleware::class,
+    'role' => \EnclaveCode\StaticAuthManager\Middleware\HasRoleMiddleware::class
 
   ]
 

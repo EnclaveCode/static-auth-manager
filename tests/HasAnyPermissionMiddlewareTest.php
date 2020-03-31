@@ -2,7 +2,7 @@
 
 namespace EnclaveCode\StaticAuthManager\Test;
 
-use EnclaveCode\StaticAuthManager\Middlewares\HasAnyPermissionMiddleware;
+use EnclaveCode\StaticAuthManager\Middleware\HasAnyPermissionMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
